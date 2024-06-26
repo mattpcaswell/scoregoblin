@@ -49,19 +49,21 @@ defmodule Scoregoblin.AccountsTest do
   end
 
   describe "register_user/1" do
-    test "requires email and password to be set" do
+    test "requires username, email, and password to be set" do
       {:error, changeset} = Accounts.register_user(%{})
 
       assert %{
+               username: ["can't be blank"],
                password: ["can't be blank"],
                email: ["can't be blank"]
              } = errors_on(changeset)
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
+      {:error, changeset} = Accounts.register_user(%{username: "not_valid", email: "not valid", password: "not valid"})
 
       assert %{
+               username: ["must have no special characters"],
                email: ["must have the @ sign and no spaces"],
                password: ["should be at least 12 character(s)"]
              } = errors_on(changeset)
@@ -69,7 +71,8 @@ defmodule Scoregoblin.AccountsTest do
 
     test "validates maximum values for email and password for security" do
       too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.register_user(%{email: too_long, password: too_long})
+      {:error, changeset} = Accounts.register_user(%{username: too_long, email: too_long, password: too_long})
+      assert "should be at most 20 character(s)" in errors_on(changeset).username
       assert "should be at most 160 character(s)" in errors_on(changeset).email
       assert "should be at most 72 character(s)" in errors_on(changeset).password
     end
@@ -101,16 +104,18 @@ defmodule Scoregoblin.AccountsTest do
     end
 
     test "allows fields to be set" do
+      username = valid_user_username()
       email = unique_user_email()
       password = valid_user_password()
 
       changeset =
         Accounts.change_user_registration(
           %User{},
-          valid_user_attributes(email: email, password: password)
+          valid_user_attributes(username: username, email: email, password: password)
         )
 
       assert changeset.valid?
+      assert get_change(changeset, :username) == username
       assert get_change(changeset, :email) == email
       assert get_change(changeset, :password) == password
       assert is_nil(get_change(changeset, :hashed_password))
