@@ -95,6 +95,17 @@ defmodule Scoregoblin.Accounts do
 
   ## Settings
 
+  def change_user_username(user, attrs \\ %{}) do
+    User.username_changeset(user, attrs)
+  end
+
+  def update_user_username(user, password, attrs) do
+    user
+    |> User.username_changeset(attrs)
+    |> User.validate_current_password(password)
+    |> Repo.update()
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the user email.
 

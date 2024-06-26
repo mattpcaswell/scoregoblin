@@ -4,6 +4,7 @@ defmodule Scoregoblin.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :username, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
@@ -37,9 +38,17 @@ defmodule Scoregoblin.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:username, :email, :password])
+    |> validate_username(opts)
     |> validate_email(opts)
     |> validate_password(opts)
+  end
+
+  defp validate_username(changest, opts) do
+    changeset
+    |> validate_required([:usernmae])
+    |> validate_format(:usernmae, ~r/[^a-zA-Z\s]+/, message: "must have no special characters")
+    |> validate_length(:username, min: 1, max: 20)
   end
 
   defp validate_email(changeset, opts) do
@@ -86,6 +95,12 @@ defmodule Scoregoblin.Accounts.User do
     else
       changeset
     end
+  end
+
+  def username_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username])
+    |> validate_username(opts)
   end
 
   @doc """
