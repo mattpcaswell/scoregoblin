@@ -1,0 +1,42 @@
+<.header>
+  Listing Game
+  <:actions>
+    <.link patch={~p"/game/new"}>
+      <.button>New Game</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="game"
+  rows={@streams.game_collection}
+  row_click={fn {_id, game} -> JS.navigate(~p"/game/#{game}") end}
+>
+  <:col :let={{_id, game}} label="Winner score"><%= game.winner_score %></:col>
+  <:col :let={{_id, game}} label="Loser score"><%= game.loser_score %></:col>
+  <:action :let={{_id, game}}>
+    <div class="sr-only">
+      <.link navigate={~p"/game/#{game}"}>Show</.link>
+    </div>
+    <.link patch={~p"/game/#{game}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, game}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: game.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="game-modal" show on_cancel={JS.patch(~p"/game")}>
+  <.live_component
+    module={ScoregoblinWeb.GameLive.FormComponent}
+    id={@game.id || :new}
+    title={@page_title}
+    action={@live_action}
+    game={@game}
+    patch={~p"/game"}
+  />
+</.modal>
