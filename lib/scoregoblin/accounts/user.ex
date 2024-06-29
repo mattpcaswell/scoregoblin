@@ -4,6 +4,7 @@ defmodule Scoregoblin.Accounts.User do
 
   schema "users" do
     field :email, :string
+    # Username is not unique!
     field :username, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -39,12 +40,12 @@ defmodule Scoregoblin.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:username, :email, :password])
-    |> validate_username(opts)
+    |> validate_username()
     |> validate_email(opts)
     |> validate_password(opts)
   end
 
-  defp validate_username(changest, opts) do
+  defp validate_username(changeset) do
     changeset
     |> validate_required([:usernmae])
     |> validate_format(:usernmae, ~r/[^a-zA-Z\s]+/, message: "must have no special characters")
@@ -97,10 +98,10 @@ defmodule Scoregoblin.Accounts.User do
     end
   end
 
-  def username_changeset(user, attrs, opts \\ []) do
+  def username_changeset(user, attrs) do
     user
     |> cast(attrs, [:username])
-    |> validate_username(opts)
+    |> validate_username()
   end
 
   @doc """

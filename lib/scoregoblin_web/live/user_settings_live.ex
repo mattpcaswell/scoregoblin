@@ -33,6 +33,7 @@ defmodule ScoregoblinWeb.UserSettingsLive do
           </:actions>
         </.simple_form>
       </div>
+      <div>
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -144,7 +145,7 @@ defmodule ScoregoblinWeb.UserSettingsLive do
     user = socket.assigns.current_user
 
     case Accounts.update_user_username(user, password, user_params) do
-      {:ok, applied_user} ->
+      {:ok, user} ->
         username_form = 
           user
           |> Accounts.change_user_username(user_params)
