@@ -47,8 +47,8 @@ defmodule Scoregoblin.Accounts.User do
 
   defp validate_username(changeset) do
     changeset
-    |> validate_required([:usernmae])
-    |> validate_format(:usernmae, ~r/[^a-zA-Z\s]+/, message: "must have no special characters")
+    |> validate_required([:username])
+    |> validate_format(:username, ~r/^[a-zA-Z0-9\s]+$/, message: "must have no special characters")
     |> validate_length(:username, min: 1, max: 20)
   end
 
