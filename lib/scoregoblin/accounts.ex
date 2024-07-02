@@ -9,6 +9,10 @@ defmodule Scoregoblin.Accounts do
   alias Scoregoblin.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
+  
+  def list_users do
+    Repo.all(User)
+  end
 
   @doc """
   Gets a user by email.

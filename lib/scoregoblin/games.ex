@@ -17,8 +17,8 @@ defmodule Scoregoblin.Games do
       [%Game{}, ...]
 
   """
-  def list_game do
-    Repo.all(Game)
+  def list_games do
+    Repo.all from game in Game, preload: [:winner, :loser, :creator]
   end
 
   @doc """
@@ -35,7 +35,10 @@ defmodule Scoregoblin.Games do
       ** (Ecto.NoResultsError)
 
   """
-  def get_game!(id), do: Repo.get!(Game, id)
+  def get_game!(id) do
+    Repo.get!(Game, id)
+    |> Repo.preload([:winner, :loser, :creator])
+  end
 
   @doc """
   Creates a game.
@@ -49,10 +52,15 @@ defmodule Scoregoblin.Games do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_game(attrs \\ %{}) do
+  def create_game(creator, attrs \\ %{}) do
+    IO.inspect(attrs, label: "attrs")
+
+    attrs = Map.put(attrs, "creator_id", creator.id)
+
     %Game{}
     |> Game.changeset(attrs)
     |> Repo.insert()
+    |> IO.inspect(label: "created game")
   end
 
   @doc """

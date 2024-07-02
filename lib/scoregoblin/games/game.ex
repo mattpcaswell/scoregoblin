@@ -2,14 +2,14 @@ defmodule Scoregoblin.Games.Game do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "game" do
+  schema "games" do
     field :winner_score, :integer
     field :loser_score, :integer
 
-    belongs_to :winner, User
-    belongs_to :loser, User
+    belongs_to :winner, Scoregoblin.Accounts.User
+    belongs_to :loser, Scoregoblin.Accounts.User
 
-    belongs_to :creator, User
+    belongs_to :creator, Scoregoblin.Accounts.User
 
     timestamps(type: :utc_datetime)
   end
@@ -21,23 +21,23 @@ defmodule Scoregoblin.Games.Game do
     |> assoc_constraint(:winner)
     |> assoc_constraint(:loser)
     |> assoc_constraint(:creator)
-    |> validate_required([:winner_score, :loser_score])
+    |> validate_required([:winner_score, :loser_score, :winner_id, :loser_id, :creator_id])
     |> validate_number(:loser_score, greater_than_or_equal_to: 0)
     |> validate_greater_than(:winner_score, :loser_score)
-    |> validate_different(:winner, :loser)
+    |> validate_different(:winner_id, :loser_id)
   end
 
   defp validate_greater_than(changeset, greater_field, lesser_field) do
-    {_, greater_field} = fetch_field(changeset, greater_field)
-    {_, lesser_field} = fetch_field(changeset, lesser_field)
+    {_, greater_value} = fetch_field(changeset, greater_field)
+    {_, lesser_value} = fetch_field(changeset, lesser_field)
 
-    if greater_field > lesser_field do
+    if greater_value > lesser_value do
       changeset
     else
       add_error(
         changeset,
-        lesser_field,
-        "Field %{greater_field} is not greater than %{lesser_field}",
+        greater_field,
+        "%{greater_field} is not greater than %{lesser_field}",
         greater_field: greater_field,
         lesser_field: lesser_field
       )

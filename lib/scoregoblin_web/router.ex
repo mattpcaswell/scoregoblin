@@ -64,6 +64,8 @@ defmodule ScoregoblinWeb.Router do
   scope "/", ScoregoblinWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    resources "/games", GameController
+
     live_session :require_authenticated_user,
       on_mount: [{ScoregoblinWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit

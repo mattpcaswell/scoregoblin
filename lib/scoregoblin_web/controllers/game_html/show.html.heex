@@ -1,0 +1,19 @@
+<.header>
+  Game <%= @game.id %>
+  <:subtitle>This is a game record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/games/#{@game}/edit"}>
+      <.button>Edit game</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Winner"><%= @game.winner.username %></:item>
+  <:item title="Winner score"><%= @game.winner_score %></:item>
+  <:item title="Loser"><%= @game.loser.username %></:item>
+  <:item title="Loser score"><%= @game.loser_score %></:item>
+  <:item title="Creator"><%= @game.creator.username %></:item>
+</.list>
+
+<.back navigate={~p"/games"}>Back to games</.back>

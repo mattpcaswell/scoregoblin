@@ -1,0 +1,13 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={f[:winner_score]} type="number" label="Winner score" />
+  <.input field={f[:loser_score]} type="number" label="Loser score" />
+
+  <.input field={f[:winner_id]} options={@all_usernames} type="select" label="Winner" />
+  <.input field={f[:loser_id]} options={@all_usernames} type="select" label="Loser" />
+  <:actions>
+    <.button>Save Game</.button>
+  </:actions>
+</.simple_form>
