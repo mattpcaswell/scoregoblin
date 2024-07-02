@@ -11,6 +11,10 @@ defmodule Scoregoblin.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
 
+    has_many :won_games, Scoregoblin.Games.Game, foreign_key: :winner_id
+    has_many :lost_games, Scoregoblin.Games.Game, foreign_key: :loser_id
+    has_many :created_games, Scoregoblin.Games.Game, foreign_key: :creator_id
+
     timestamps(type: :utc_datetime)
   end
 

@@ -11,7 +11,7 @@ defmodule Scoregoblin.Accounts do
   ## Database getters
   
   def list_users do
-    Repo.all(User)
+    Repo.all from user in User, preload: [:won_games, :lost_games, :created_games]
   end
 
   @doc """
