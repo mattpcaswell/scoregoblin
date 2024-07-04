@@ -62,7 +62,14 @@ defmodule Scoregoblin.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload([
+      won_games: [:winner, :loser],
+      lost_games: [:winner, :loser],
+      created_games: [:winner, :loser]
+    ])
+  end
 
   ## User registration
 

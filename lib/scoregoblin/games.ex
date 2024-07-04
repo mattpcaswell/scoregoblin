@@ -23,6 +23,12 @@ defmodule Scoregoblin.Games do
       order_by: [desc: :inserted_at]
   end
 
+  def list_games_for_player(player) do
+    Repo.all from game in Game, 
+      preload: [:winner, :loser, :creator],
+      order_by: [desc: :inserted_at]
+  end
+
   @doc """
   Gets a single game.
 

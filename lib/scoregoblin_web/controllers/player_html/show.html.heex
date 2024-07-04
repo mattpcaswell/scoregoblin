@@ -1,0 +1,10 @@
+<.header>
+  <%= @player.username %>
+  <:subtitle>This is a player record from your database.</:subtitle>
+</.header>
+
+<.list>
+  <:item title="Account Created"><%= @player.inserted_at %></:item>
+</.list>
+
+<ScoregoblinWeb.GameList.game_list games={@player_games} />
