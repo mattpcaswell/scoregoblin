@@ -17,6 +17,7 @@ defmodule Scoregoblin.Accounts do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:winner_elo_update, winner_changeset)
     |> Ecto.Multi.update(:lower_elo_update, loser_changeset)
+    |> Repo.transaction()
   end
 
   ## Database getters
