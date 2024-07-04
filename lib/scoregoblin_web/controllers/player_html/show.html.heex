@@ -1,10 +1,19 @@
-<.header>
+<h1 class="text-2xl font-semibold leading-8 text-zinc-800">
   <%= @player.username %>
-  <:subtitle>This is a player record from your database.</:subtitle>
-</.header>
+</h1>
 
 <.list>
-  <:item title="Account Created"><%= @player.inserted_at %></:item>
+  <:item title="Wins"><%= length(@player.won_games) %></:item>
+  <:item title="Losses"><%= length(@player.lost_games) %></:item>
+  <:item title="Account Created"><%= Timex.from_now(@player.inserted_at) %></:item>
 </.list>
 
+<h1 class="mt-16 text-xl font-semibold leading-8 text-zinc-800">
+  Played Games
+</h1>
 <ScoregoblinWeb.GameList.game_list games={@player_games} />
+
+<h1 class="mt-16 text-xl font-semibold leading-8 text-zinc-800">
+  Logged Games
+</h1>
+<ScoregoblinWeb.GameList.game_list games={@player.created_games} />
