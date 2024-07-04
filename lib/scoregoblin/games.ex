@@ -18,7 +18,9 @@ defmodule Scoregoblin.Games do
 
   """
   def list_games do
-    Repo.all from game in Game, preload: [:winner, :loser, :creator]
+    Repo.all from game in Game, 
+      preload: [:winner, :loser, :creator],
+      order_by: [desc: :inserted_at]
   end
 
   @doc """
