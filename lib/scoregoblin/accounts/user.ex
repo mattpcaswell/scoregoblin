@@ -11,6 +11,8 @@ defmodule Scoregoblin.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
 
+    field :elo, :integer, default: 1000
+
     has_many :won_games, Scoregoblin.Games.Game, foreign_key: :winner_id
     has_many :lost_games, Scoregoblin.Games.Game, foreign_key: :loser_id
     has_many :created_games, Scoregoblin.Games.Game, foreign_key: :creator_id
@@ -47,6 +49,11 @@ defmodule Scoregoblin.Accounts.User do
     |> validate_username()
     |> validate_email(opts)
     |> validate_password(opts)
+  end
+
+  def elo_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:elo])
   end
 
   defp validate_username(changeset) do

@@ -23,12 +23,6 @@ defmodule Scoregoblin.Games do
       order_by: [desc: :inserted_at]
   end
 
-  def list_games_for_player(player) do
-    Repo.all from game in Game, 
-      preload: [:winner, :loser, :creator],
-      order_by: [desc: :inserted_at]
-  end
-
   @doc """
   Gets a single game.
 
@@ -61,11 +55,19 @@ defmodule Scoregoblin.Games do
 
   """
   def create_game(creator, attrs \\ %{}) do
-    attrs = Map.put(attrs, "creator_id", creator.id)
+    winner = Scoregoblin.Accounts.get_user!(attrs["winner_id"])
+    loser  = Scoregoblin.Accounts.get_user!(attrs["loser_id"])
 
-    %Game{}
-    |> Game.changeset(attrs)
-    |> Repo.insert()
+    attrs = Map.put(attrs, "creator_id", creator.id)
+    attrs = Map.put(attrs, "winner_pre_game_elo", winner.elo)
+    attrs = Map.put(attrs, "loser_pre_game_elo", loser.elo)
+
+    add_game_changeset = Game.changeset(%Game{}, attrs)
+
+    with {:ok, game} <- Repo.insert(add_game_changeset) do
+      Scoregoblin.Accounts.elo_update(game, winner, loser)
+      {:ok, game}
+    end
   end
 
   @doc """

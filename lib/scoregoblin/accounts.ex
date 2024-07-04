@@ -8,6 +8,17 @@ defmodule Scoregoblin.Accounts do
 
   alias Scoregoblin.Accounts.{User, UserToken, UserNotifier}
 
+  def elo_update(game, winner, loser) do
+    {winner_elo, loser_elo} = Elo.rate(game.winner_pre_game_elo, game.loser_pre_game_elo, :win)
+
+    winner_changeset = User.elo_changeset(winner, %{elo: winner_elo})
+    loser_changeset = User.elo_changeset(loser, %{elo: loser_elo})
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:winner_elo_update, winner_changeset)
+    |> Ecto.Multi.update(:lower_elo_update, loser_changeset)
+  end
+
   ## Database getters
   
   def list_users do

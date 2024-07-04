@@ -11,6 +11,7 @@ defmodule ScoregoblinWeb.PlayerList do
       <:col :let={player} label="Name"><%= player.username %></:col>
       <:col :let={player} label="Wins"><%= length(player.won_games) %></:col>
       <:col :let={player} label="Losses"><%= length(player.lost_games) %></:col>
+      <:col :let={player} label="Elo"><%= player.elo %></:col>
       <:col :let={player} label="Last played"><%= Timex.from_now(get_most_recent_game(player).inserted_at) %></:col>
 
       <:action :let={player}>

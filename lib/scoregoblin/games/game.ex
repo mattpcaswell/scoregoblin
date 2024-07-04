@@ -6,6 +6,9 @@ defmodule Scoregoblin.Games.Game do
     field :winner_score, :integer
     field :loser_score, :integer
 
+    field :winner_pre_game_elo, :integer
+    field :loser_pre_game_elo, :integer
+
     belongs_to :winner, Scoregoblin.Accounts.User
     belongs_to :loser, Scoregoblin.Accounts.User
 
@@ -17,11 +20,11 @@ defmodule Scoregoblin.Games.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:winner_score, :loser_score, :winner_id, :loser_id, :creator_id])
+    |> cast(attrs, [:winner_score, :loser_score, :winner_id, :loser_id, :creator_id, :winner_pre_game_elo, :loser_pre_game_elo])
     |> assoc_constraint(:winner)
     |> assoc_constraint(:loser)
     |> assoc_constraint(:creator)
-    |> validate_required([:winner_score, :loser_score, :winner_id, :loser_id, :creator_id])
+    |> validate_required([:winner_score, :loser_score, :winner_id, :loser_id, :creator_id, :winner_pre_game_elo, :loser_pre_game_elo])
     |> validate_number(:loser_score, greater_than_or_equal_to: 0)
     |> validate_greater_than(:winner_score, :loser_score)
     |> validate_different(:winner_id, :loser_id)
