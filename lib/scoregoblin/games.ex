@@ -55,14 +55,11 @@ defmodule Scoregoblin.Games do
 
   """
   def create_game(creator, attrs \\ %{}) do
-    IO.inspect(attrs, label: "attrs")
-
     attrs = Map.put(attrs, "creator_id", creator.id)
 
     %Game{}
     |> Game.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect(label: "created game")
   end
 
   @doc """

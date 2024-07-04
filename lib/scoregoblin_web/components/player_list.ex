@@ -3,8 +3,6 @@ defmodule ScoregoblinWeb.PlayerList do
 
   attr :players, :list, required: true
   def player_list(assigns) do
-    IO.inspect(assigns.players, label: "Player assigns")
-
     sorted_players = Enum.sort_by(assigns.players, &(length(&1.won_games)), :desc)
 
     ~H"""

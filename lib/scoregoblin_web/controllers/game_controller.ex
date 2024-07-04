@@ -29,7 +29,6 @@ defmodule ScoregoblinWeb.GameController do
         |> redirect(to: ~p"/games/#{game}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset, label: "failed changeset")
         render(conn, :new, changeset: changeset, all_usernames: all_usernames)
     end
   end
