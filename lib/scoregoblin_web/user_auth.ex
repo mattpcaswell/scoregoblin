@@ -213,6 +213,26 @@ defmodule ScoregoblinWeb.UserAuth do
     end
   end
 
+  def only_me(conn, _opts) do
+    if conn_is_me(conn) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must log in to access this page.")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  def conn_is_me(conn) do
+    if conn.assigns[:current_user] && conn.assigns[:current_user].username == "Matt Caswell" do
+      true
+    else
+      false
+    end
+  end
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)
